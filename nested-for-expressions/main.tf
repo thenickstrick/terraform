@@ -7,8 +7,9 @@ locals {
 
   # create for-expression to iterate over sample data to extract more desirable/specific output
   expected_output = [
+    # adding cities here is necessary for terrafrom to properly output the contninent map from the root map of values
     for continent, cities in local.root_node : {
-      display_name = "$(continent)"
+      display_name = "${continent}"
     }
   ]
 }
