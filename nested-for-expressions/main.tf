@@ -21,7 +21,8 @@ locals {
       # nestied for-expression to output the detail in the ctities map
       for city, detail in cities : {
         # concatenate the city to the continent to output as one object
-        display_name = "${continent} - ${city}"
+        # use replace to clean up the sample data in output
+        display_name = "${replace(continent, "continent : ", "")}/${replace(city, "city : ", "")}"
       }
     ]
   ])
