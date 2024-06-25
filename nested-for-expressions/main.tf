@@ -14,7 +14,8 @@ locals {
   #   }
   # ]
 
-  expected_output = [
+  # flatten the expected output to a single array, making the data easier to iterate across
+  expected_output = flatten([
     for continent, cities in local.root_node :
     [
       # nestied for-expression to output the detail in the ctities map
@@ -23,7 +24,7 @@ locals {
         display_name = "${continent} - ${city}"
       }
     ]
-  ]
+  ])
 }
 
 # output "raw_content" {
