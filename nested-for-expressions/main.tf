@@ -19,10 +19,13 @@ locals {
     for continent, cities in local.root_node :
     [
       # nestied for-expression to output the detail in the ctities map
-      for city, detail in cities : {
+      for city, details in cities : {
         # concatenate the city to the continent to output as one object
         # use replace to clean up the sample data in output
         display_name = "${replace(continent, "continent : ", "")}/${replace(city, "city : ", "")}"
+        # create for-expression to iterate across list of details to create an array of address spaces for each city
+        # don't include range if empty
+        address_space = [for detail in details : detail.range if detail.range != ""]
       }
     ]
   ])
