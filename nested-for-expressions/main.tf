@@ -15,20 +15,41 @@ locals {
   # ]
 
   # flatten the expected output to a single array, making the data easier to iterate across
-  expected_output = flatten([
+  # expected_output = flatten([
+  #   for continent, cities in local.root_node :
+  #   [
+  #     # nestied for-expression to output the detail in the ctities map
+  #     for city, details in cities : {
+  #       # concatenate the city to the continent to output as one object
+  #       # use replace to clean up the sample data in output
+  #       display_name = "${replace(continent, "continent : ", "")}/${replace(city, "city : ", "")}"
+  #       # create for-expression to iterate across list of details to create an array of address spaces for each city
+  #       # don't include range if empty
+  #       address_space = [for detail in details : detail.range if detail.range != ""]
+  #     }
+  #   ]
+  # ])
+
+expected_output = flatten(
+  [
     for continent, cities in local.root_node :
     [
-      # nestied for-expression to output the detail in the ctities map
       for city, details in cities : {
-        # concatenate the city to the continent to output as one object
-        # use replace to clean up the sample data in output
         display_name = "${replace(continent, "continent : ", "")}/${replace(city, "city : ", "")}"
-        # create for-expression to iterate across list of details to create an array of address spaces for each city
-        # don't include range if empty
         address_space = [for detail in details : detail.range if detail.range != ""]
       }
     ]
-  ])
+  ]
+)
+
+# new for expression to create the map of expected output
+expected_output_map = {
+  for item in local.expected_output :
+  # mapping the value of the item in the expected output with 
+  # a key of address_space which is a collection
+  item.display_name => item.address_space
+}
+
 }
 
 # output "raw_content" {
@@ -41,5 +62,6 @@ locals {
 # }
 
 output "expected_output" {
-  value = local.expected_output
+  # now the output is easier to iterate across with a for_each
+  value = local.expected_output_map
 }
